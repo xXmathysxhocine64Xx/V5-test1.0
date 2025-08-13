@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import nodemailer from 'nodemailer';
 
 // GET handler for testing
 export async function GET(request) {
