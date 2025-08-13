@@ -22,7 +22,7 @@ export async function POST(request) {
     // Handle contact form submissions
     if (pathname.includes('/api/contact')) {
       const body = await request.json();
-      const { name, email, message, subject = 'Nouveau message de contact' } = body;
+      const { name, email, message, subject = 'Nouveau message de GetYourSite' } = body;
       
       // Validate required fields
       if (!name || !email || !message) {
@@ -32,22 +32,86 @@ export async function POST(request) {
         );
       }
 
-      // For now, we'll just log the contact form submission
-      // Email functionality will be added once Gmail credentials are provided
-      console.log('Contact form submission:', {
-        name,
-        email,
-        subject,
-        message,
-        timestamp: new Date().toISOString()
-      });
+      // Check if Gmail is configured
+      if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_USER === 'votre-email@gmail.com') {
+        console.log('Contact form submission (Gmail not configured):', {
+          name, email, subject, message, timestamp: new Date().toISOString()
+        });
+        
+        return NextResponse.json({
+          success: true,
+          message: 'Message reçu ! Nous vous recontacterons bientôt.',
+          note: 'Configuration Gmail requise pour l\'envoi automatique'
+        });
+      }
 
-      // Return success response
-      return NextResponse.json({
-        success: true,
-        message: 'Message reçu avec succès ! Nous vous recontacterons bientôt.',
-        timestamp: new Date().toISOString()
-      });
+      try {
+        // Create email transporter
+        const transporter = nodemailer.createTransporter({
+          host: process.env.SMTP_HOST,
+          port: parseInt(process.env.SMTP_PORT),
+          secure: false, // true for 465, false for other ports
+          auth: {
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_APP_PASSWORD,
+          },
+        });
+        
+        // Format email content
+        const mailOptions = {
+          from: `"${name}" <${process.env.GMAIL_USER}>`,
+          to: process.env.GMAIL_RECIPIENT || process.env.GMAIL_USER,
+          replyTo: email,
+          subject: subject,
+          text: `
+            Nouveau message depuis GetYourSite
+            
+            Nom: ${name}
+            Email: ${email}
+            
+            Message:
+            ${message}
+          `,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <h2 style="color: #2563eb;">Nouveau message depuis GetYourSite</h2>
+              <p><strong>Nom:</strong> ${name}</p>
+              <p><strong>Email:</strong> ${email}</p>
+              <p><strong>Message:</strong></p>
+              <div style="background-color: #f8fafc; padding: 15px; border-radius: 5px; border-left: 4px solid #2563eb;">
+                ${message.replace(/\n/g, '<br>')}
+              </div>
+              <p style="color: #64748b; font-size: 12px; margin-top: 20px;">
+                Ce message a été envoyé depuis le formulaire de contact de GetYourSite.
+              </p>
+            </div>
+          `,
+        };
+        
+        // Send email
+        const info = await transporter.sendMail(mailOptions);
+        
+        return NextResponse.json({ 
+          success: true, 
+          message: 'Votre message a été envoyé avec succès !',
+          messageId: info.messageId 
+        });
+        
+      } catch (emailError) {
+        console.error('Email sending error:', emailError);
+        
+        // Log the message even if email fails
+        console.log('Contact form submission (email failed):', {
+          name, email, subject, message, 
+          error: emailError.message,
+          timestamp: new Date().toISOString()
+        });
+        
+        return NextResponse.json(
+          { error: 'Erreur lors de l\'envoi de l\'email. Veuillez réessayer.' },
+          { status: 500 }
+        );
+      }
     }
 
     // Default POST response for other endpoints
