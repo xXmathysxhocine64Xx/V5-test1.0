@@ -219,11 +219,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Gmail SMTP Integration"
-    - "Environment Variables Configuration"
-  stuck_tasks:
-    - "Gmail SMTP Integration"
-    - "Environment Variables Configuration"
+    - "Contact Form Component"
+    - "Landing Page Design"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
