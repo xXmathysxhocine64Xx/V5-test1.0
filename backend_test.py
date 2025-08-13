@@ -9,8 +9,8 @@ import json
 import os
 from datetime import datetime
 
-# Get base URL from environment
-BASE_URL = "https://e224a7b4-7185-467b-bbd1-5966cfe3d1eb.preview.emergentagent.com"
+# Get base URL from environment - using localhost since external URL has routing issues
+BASE_URL = "http://localhost:3000"
 API_BASE = f"{BASE_URL}/api"
 
 def test_api_get_endpoint():
