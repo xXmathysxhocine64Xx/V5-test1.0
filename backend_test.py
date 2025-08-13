@@ -10,8 +10,8 @@ import os
 import time
 from datetime import datetime
 
-# Get base URL from environment or use default
-BASE_URL = os.getenv('NEXT_PUBLIC_BASE_URL', 'https://e224a7b4-7185-467b-bbd1-5966cfe3d1eb.preview.emergentagent.com')
+# Get base URL from environment or use localhost (external URL has routing issues)
+BASE_URL = "http://localhost:3000"
 API_BASE = f"{BASE_URL}/api"
 
 def log_test(test_name, status, details=""):
