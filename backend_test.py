@@ -1,17 +1,27 @@
 #!/usr/bin/env python3
 """
-Backend API Tests for GetYourSite
-Tests the actual implemented functionality in app/api/[[...path]]/route.js
+Backend Test Suite for GetYourSite Gmail SMTP Integration
+Re-testing after corrections: nodemailer import + Gmail environment variables
 """
 
 import requests
 import json
 import os
+import time
 from datetime import datetime
 
-# Get base URL from environment - using localhost since external URL has routing issues
-BASE_URL = "http://localhost:3000"
+# Get base URL from environment or use default
+BASE_URL = os.getenv('NEXT_PUBLIC_BASE_URL', 'https://e224a7b4-7185-467b-bbd1-5966cfe3d1eb.preview.emergentagent.com')
 API_BASE = f"{BASE_URL}/api"
+
+def log_test(test_name, status, details=""):
+    """Log test results with timestamp"""
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    status_icon = "✅" if status == "PASS" else "❌" if status == "FAIL" else "⚠️"
+    print(f"[{timestamp}] {status_icon} {test_name}: {status}")
+    if details:
+        print(f"    Details: {details}")
+    print()
 
 def test_api_get_endpoint():
     """Test GET /api endpoint"""
