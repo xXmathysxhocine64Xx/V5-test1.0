@@ -1,6 +1,59 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
+// Security utilities
+function sanitizeHtml(str) {
+  if (!str) return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+    .replace(/\//g, '&#x2F;');
+}
+
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+function validateInput(str, maxLength = 500) {
+  if (!str || typeof str !== 'string') return false;
+  if (str.length > maxLength) return false;
+  // Remove any null bytes and control characters
+  const cleaned = str.replace(/[\x00-\x1F\x7F]/g, '');
+  return cleaned.length > 0;
+}
+
+// Rate limiting store (in production, use Redis or database)
+const rateLimitStore = new Map();
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
+const RATE_LIMIT_MAX_REQUESTS = 5; // Max 5 requests per window
+
+function isRateLimited(ip) {
+  const now = Date.now();
+  const key = ip;
+  
+  if (!rateLimitStore.has(key)) {
+    rateLimitStore.set(key, { count: 1, firstRequest: now });
+    return false;
+  }
+  
+  const record = rateLimitStore.get(key);
+  
+  // Reset if window has passed
+  if (now - record.firstRequest > RATE_LIMIT_WINDOW) {
+    rateLimitStore.set(key, { count: 1, firstRequest: now });
+    return false;
+  }
+  
+  // Increment counter
+  record.count++;
+  
+  return record.count > RATE_LIMIT_MAX_REQUESTS;
+}
+
 // GET handler for testing
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
