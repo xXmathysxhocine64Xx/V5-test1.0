@@ -582,9 +582,9 @@ export default function HomePage() {
             <div>
               <h4 className="font-semibold mb-4">Contact</h4>
               <ul className="space-y-2 text-slate-300">
-                <li>contact@getyoursite.com</li>
-                <li>+33 (0)1 23 45 67 89</li>
-                <li>France</li>
+                <li>{contact.email}</li>
+                <li>{contact.phone}</li>
+                <li>{contact.location}</li>
               </ul>
             </div>
           </div>
