@@ -429,7 +429,7 @@ export async function PUT(request) {
       const { messageId } = body;
       
       await database.collection('contact_submissions').updateOne(
-        { _id: new require('mongodb').ObjectId(messageId) },
+        { _id: new ObjectId(messageId) },
         { $set: { read: true } }
       );
       
