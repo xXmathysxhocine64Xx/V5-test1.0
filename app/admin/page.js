@@ -46,6 +46,18 @@ export default function AdminPanel() {
 
   const verifyToken = async (token) => {
     try {
+      // Check if it's a client-side auth token
+      if (token.startsWith('client_auth_')) {
+        const userData = localStorage.getItem('admin_user')
+        if (userData) {
+          setIsAuthenticated(true)
+          loadSiteContent()
+          loadContactMessages()
+          return
+        }
+      }
+      
+      // Try API verification
       const response = await fetch('/api/admin/verify', {
         headers: { Authorization: `Bearer ${token}` }
       })
@@ -56,10 +68,20 @@ export default function AdminPanel() {
         loadContactMessages()
       } else {
         localStorage.removeItem('admin_token')
+        localStorage.removeItem('admin_user')
       }
     } catch (error) {
       console.error('Token verification failed:', error)
-      localStorage.removeItem('admin_token')
+      // Check if we have client-side auth as fallback
+      const userData = localStorage.getItem('admin_user')
+      if (userData && token.startsWith('client_auth_')) {
+        setIsAuthenticated(true)
+        loadSiteContent()
+        loadContactMessages()
+      } else {
+        localStorage.removeItem('admin_token')
+        localStorage.removeItem('admin_user')
+      }
     } finally {
       setIsLoading(false)
     }
