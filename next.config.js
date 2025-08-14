@@ -1,5 +1,5 @@
 const nextConfig = {
-  output: 'standalone',
+  // output: 'standalone', // Disabled to fix PM2 compatibility issue
   images: {
     unoptimized: true,
   },
