@@ -74,11 +74,54 @@ export default function HomePage() {
     }
   ]
 
+  // Enhanced validation function
+  const validateForm = () => {
+    const errors = []
+    
+    // Name validation
+    if (!contactForm.name.trim()) {
+      errors.push('Le nom est requis')
+    } else if (contactForm.name.length > 100) {
+      errors.push('Le nom doit contenir moins de 100 caractères')
+    }
+    
+    // Email validation
+    if (!contactForm.email.trim()) {
+      errors.push('L\'email est requis')
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(contactForm.email)) {
+        errors.push('L\'email n\'est pas valide')
+      } else if (contactForm.email.length > 254) {
+        errors.push('L\'email est trop long')
+      }
+    }
+    
+    // Message validation
+    if (!contactForm.message.trim()) {
+      errors.push('Le message est requis')
+    } else if (contactForm.message.length > 2000) {
+      errors.push('Le message doit contenir moins de 2000 caractères')
+    }
+    
+    // Subject validation
+    if (contactForm.subject && contactForm.subject.length > 200) {
+      errors.push('Le sujet doit contenir moins de 200 caractères')
+    }
+    
+    return errors
+  }
+
   const handleContactSubmit = async (e) => {
     e.preventDefault()
     
-    if (!contactForm.name || !contactForm.email || !contactForm.message) {
-      setSubmitStatus({ type: 'error', message: 'Veuillez remplir tous les champs requis' })
+    // Client-side validation
+    const validationErrors = validateForm()
+    if (validationErrors.length > 0) {
+      setSubmitStatus({ 
+        type: 'error', 
+        message: validationErrors.join('. ') 
+      })
       return
     }
 
@@ -89,7 +132,12 @@ export default function HomePage() {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(contactForm)
+        body: JSON.stringify({
+          name: contactForm.name.trim(),
+          email: contactForm.email.trim().toLowerCase(),
+          subject: contactForm.subject.trim(),
+          message: contactForm.message.trim()
+        })
       })
 
       const data = await response.json()
@@ -98,10 +146,14 @@ export default function HomePage() {
         setContactForm({ name: '', email: '', subject: '', message: '' })
         setSubmitStatus({ type: 'success', message: 'Votre message a été envoyé avec succès!' })
       } else {
-        setSubmitStatus({ type: 'error', message: data.error || 'Erreur lors de l\'envoi' })
+        if (response.status === 429) {
+          setSubmitStatus({ type: 'error', message: 'Trop de tentatives. Veuillez patienter avant de réessayer.' })
+        } else {
+          setSubmitStatus({ type: 'error', message: data.error || 'Erreur lors de l\'envoi' })
+        }
       }
     } catch (error) {
-      setSubmitStatus({ type: 'error', message: 'Une erreur est survenue' })
+      setSubmitStatus({ type: 'error', message: 'Une erreur de connexion est survenue' })
     } finally {
       setIsSubmitting(false)
     }
