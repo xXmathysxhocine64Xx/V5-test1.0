@@ -477,6 +477,7 @@ export default function HomePage() {
                       onChange={handleInputChange}
                       placeholder="Décrivez votre projet..."
                       rows={5}
+                      maxLength={2000}
                       required
                     />
                   </div>
