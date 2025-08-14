@@ -83,6 +83,7 @@ export default function AdminPanel() {
         setIsAuthenticated(true)
         loadSiteContent()
         loadContactMessages()
+        loadPublications()
       } else {
         localStorage.removeItem('admin_token')
         localStorage.removeItem('admin_user')
