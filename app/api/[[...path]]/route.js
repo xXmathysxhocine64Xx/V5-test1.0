@@ -417,6 +417,71 @@ export async function POST(request) {
       });
     }
 
+    // Admin: Create publication
+    if (pathname.includes('/api/admin/publications')) {
+      const token = request.headers.get('authorization')?.replace('Bearer ', '');
+      const decoded = verifyToken(token);
+      
+      if (!decoded) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+
+      const body = await request.json();
+      const { title, content, author, status = 'draft' } = body;
+      
+      // Validation
+      if (!validateInput(title, 200)) {
+        return NextResponse.json(
+          { error: 'Le titre est requis et doit contenir moins de 200 caractères' },
+          { status: 400 }
+        );
+      }
+      
+      if (!validateInput(content, 5000)) {
+        return NextResponse.json(
+          { error: 'Le contenu est requis et doit contenir moins de 5000 caractères' },
+          { status: 400 }
+        );
+      }
+
+      if (!validateInput(author, 100)) {
+        return NextResponse.json(
+          { error: 'L\'auteur est requis et doit contenir moins de 100 caractères' },
+          { status: 400 }
+        );
+      }
+
+      if (status && !['draft', 'published'].includes(status)) {
+        return NextResponse.json(
+          { error: 'Le statut doit être "draft" ou "published"' },
+          { status: 400 }
+        );
+      }
+
+      // Create publication
+      const database = await connectToDatabase();
+      const publicationId = Date.now().toString();
+      
+      const publication = {
+        id: publicationId,
+        title: sanitizeHtml(title),
+        content: sanitizeHtml(content),
+        author: sanitizeHtml(author),
+        status: status,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        publishedAt: status === 'published' ? new Date() : null
+      };
+
+      await database.collection('publications').insertOne(publication);
+      
+      return NextResponse.json({ 
+        success: true, 
+        message: 'Publication créée avec succès',
+        publication
+      });
+    }
+
     return NextResponse.json({
       message: 'API POST endpoint active',
       timestamp: new Date().toISOString()
