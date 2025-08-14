@@ -555,7 +555,7 @@ export default function AdminPanel() {
             </TabsTrigger>
             <TabsTrigger value="messages" className="flex items-center gap-2">
               <MessageSquare className="w-4 h-4" />
-              Messages ({contactMessages.filter(m => !m.read).length})
+              Messages ({(contactMessages || []).filter(m => !m.read).length})
             </TabsTrigger>
           </TabsList>
 
