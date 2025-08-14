@@ -11,7 +11,7 @@ import os
 from datetime import datetime
 
 # Configuration
-BASE_URL = os.getenv('NEXT_PUBLIC_BASE_URL', 'https://mysite-manager.preview.emergentagent.com')
+BASE_URL = "http://localhost:3000"  # Using localhost due to external URL 502 issues
 API_BASE = f"{BASE_URL}/api"
 
 # Admin credentials from review request
