@@ -443,15 +443,15 @@ export default function HomePage() {
               <div className="space-y-4">
                 <div className="flex items-center space-x-4">
                   <Mail className="w-6 h-6 text-blue-600" />
-                  <span className="text-slate-700">contact@getyoursite.com</span>
+                  <span className="text-slate-700">{contact.email}</span>
                 </div>
                 <div className="flex items-center space-x-4">
                   <Phone className="w-6 h-6 text-blue-600" />
-                  <span className="text-slate-700">+33 (0)1 23 45 67 89</span>
+                  <span className="text-slate-700">{contact.phone}</span>
                 </div>
                 <div className="flex items-center space-x-4">
                   <MapPin className="w-6 h-6 text-blue-600" />
-                  <span className="text-slate-700">France</span>
+                  <span className="text-slate-700">{contact.location}</span>
                 </div>
               </div>
 
