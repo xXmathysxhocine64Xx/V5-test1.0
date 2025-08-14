@@ -10,8 +10,8 @@ import time
 import sys
 from datetime import datetime
 
-# Get base URL from environment
-BASE_URL = "https://backup-issue.preview.emergentagent.com"
+# Get base URL from environment - using localhost due to external URL 502 issues
+BASE_URL = "http://localhost:3000"
 CONTACT_API = f"{BASE_URL}/api/contact"
 
 class SecurityTester:
