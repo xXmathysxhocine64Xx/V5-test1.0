@@ -17,7 +17,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_NAME="getyoursite"
 PROJECT_DIR="/var/www/${PROJECT_NAME}"
 NODE_VERSION="18"
-BACKUP_DIR="/var/backups/${PROJECT_NAME}"
 
 # Couleurs pour l'affichage
 readonly RED='\033[0;31m'
