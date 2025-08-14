@@ -10,8 +10,8 @@ import time
 import os
 from datetime import datetime
 
-# Configuration - Using external URL as specified in review request
-BASE_URL = "https://publication-hub.preview.emergentagent.com"
+# Configuration - Using localhost due to external URL 502 issues
+BASE_URL = "http://localhost:3000"
 API_BASE = f"{BASE_URL}/api"
 
 # Admin credentials from review request
