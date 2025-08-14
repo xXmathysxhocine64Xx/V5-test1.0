@@ -395,6 +395,17 @@ NEXT_PUBLIC_SITE_NAME=GetYourSite
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 EOF
 
+    # Vérification que le fichier .env a été créé
+    if [[ -f .env ]]; then
+        print_success "Fichier .env créé avec succès"
+        if [[ "$GMAIL_USER" != "votre-email@gmail.com" ]]; then
+            print_success "Configuration Gmail intégrée dans .env"
+        fi
+    else
+        print_error "Erreur lors de la création du fichier .env"
+        exit 1
+    fi
+
     # Configuration jsconfig.json pour les imports absolus
     cat > jsconfig.json << 'EOF'
 {
