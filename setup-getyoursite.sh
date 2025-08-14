@@ -382,7 +382,7 @@ module.exports = {
 EOF
 
     # Fichier d'environnement
-    cat > .env.local << EOF
+    cat > .env << EOF
 # Configuration Gmail pour le formulaire de contact
 GMAIL_USER=${GMAIL_USER}
 GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD}
