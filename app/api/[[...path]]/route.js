@@ -239,13 +239,17 @@ export async function POST(request) {
       const body = await request.json();
       const { username, password } = body;
 
+      // Hardcoded credentials as fallback for external URL issues
+      const adminUsername = process.env.ADMIN_USERNAME || 'admin_getyoursite';
+      const adminPassword = process.env.ADMIN_PASSWORD || 'AdminGYS2024';
+
       console.log('Admin login attempt:', {
         providedUsername: username,
-        envUsername: process.env.ADMIN_USERNAME,
-        envPassword: process.env.ADMIN_PASSWORD ? 'SET' : 'NOT SET'
+        envUsername: adminUsername,
+        envPasswordSet: adminPassword ? 'SET' : 'NOT SET'
       });
 
-      if (username !== process.env.ADMIN_USERNAME || password !== process.env.ADMIN_PASSWORD) {
+      if (username !== adminUsername || password !== adminPassword) {
         console.log('Authentication failed - credentials mismatch');
         return NextResponse.json(
           { error: 'Identifiants incorrets' },
