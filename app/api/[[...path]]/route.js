@@ -239,9 +239,16 @@ export async function POST(request) {
       const body = await request.json();
       const { username, password } = body;
 
+      console.log('Admin login attempt:', {
+        providedUsername: username,
+        envUsername: process.env.ADMIN_USERNAME,
+        envPassword: process.env.ADMIN_PASSWORD ? 'SET' : 'NOT SET'
+      });
+
       if (username !== process.env.ADMIN_USERNAME || password !== process.env.ADMIN_PASSWORD) {
+        console.log('Authentication failed - credentials mismatch');
         return NextResponse.json(
-          { error: 'Identifiants incorrects' },
+          { error: 'Identifiants incorrets' },
           { status: 401 }
         );
       }
