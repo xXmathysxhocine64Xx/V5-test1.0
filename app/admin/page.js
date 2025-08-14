@@ -200,6 +200,20 @@ export default function AdminPanel() {
     }
   }
 
+  const loadPublications = async () => {
+    try {
+      const token = localStorage.getItem('admin_token')
+      const response = await fetch('/api/admin/publications', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      const data = await response.json()
+      setPublications(data || [])
+    } catch (error) {
+      console.error('Failed to load publications:', error)
+      setPublications([])
+    }
+  }
+
   const updateContent = async (type, data) => {
     try {
       // Save to localStorage immediately
