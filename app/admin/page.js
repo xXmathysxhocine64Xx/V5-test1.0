@@ -1305,9 +1305,9 @@ export default function AdminPanel() {
                         </div>
                       </div>
                     </div>
-                  )) : null}}
+                  )) : null}
                   
-                  {contactMessages.length === 0 && (
+                  {(!contactMessages || contactMessages.length === 0) && (
                     <div className="text-center py-8 text-slate-500">
                       Aucun message reçu pour le moment
                     </div>
