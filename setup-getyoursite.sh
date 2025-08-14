@@ -862,7 +862,7 @@ show_final_info() {
     
     echo -e "${CYAN}📁 FICHIERS IMPORTANTS :${NC}"
     echo "   • Projet : $PROJECT_DIR"
-    echo "   • Configuration : $PROJECT_DIR/.env.local"
+    echo "   • Configuration : $PROJECT_DIR/.env"
     echo "   • Logs : /var/log/pm2/ et /var/log/nginx/"
     echo
     
