@@ -138,6 +138,7 @@ export default function AdminPanel() {
 
   const handleLogout = () => {
     localStorage.removeItem('admin_token')
+    localStorage.removeItem('admin_user')
     setIsAuthenticated(false)
     router.push('/admin')
   }
