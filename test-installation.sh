@@ -195,18 +195,20 @@ test_existing_services() {
 test_dry_run() {
     print_header "SIMULATION D'INSTALLATION"
     
-    print_test "Test de création de répertoire..."
+    print_test "Test de création de répertoire temporaire..."
     local test_dir="/tmp/getyoursite-test-$$"
-    if mkdir -p "$test_dir" && rmdir "$test_dir"; then
+    if mkdir -p "$test_dir" 2>/dev/null && rmdir "$test_dir" 2>/dev/null; then
         print_success "Permissions de création de répertoire OK"
     else
-        print_error "Problème de permissions pour créer des répertoires"
+        print_error "Problème de permissions pour créer des répertoires temporaires"
         return 1
     fi
     
-    print_test "Test d'écriture dans /var/www..."
+    print_test "Vérification des privilèges d'installation..."
     if [[ $EUID -eq 0 ]]; then
-        # Si root, essayer de créer un répertoire test
+        print_success "Privilèges root disponibles pour installation"
+        
+        print_test "Test d'écriture dans /var/www..."
         if mkdir -p /var/www/test-$$ 2>/dev/null && rmdir /var/www/test-$$ 2>/dev/null; then
             print_success "Permissions d'écriture dans /var/www OK"
         elif [[ ! -d /var/www ]]; then
@@ -214,21 +216,25 @@ test_dry_run() {
         else
             print_success "Permissions d'écriture dans /var/www (seront ajustées)"
         fi
-    elif [[ -w /var/www ]] 2>/dev/null; then
-        print_success "Permissions d'écriture dans /var/www OK"
+        
+        print_test "Test d'écriture dans /etc..."
+        if [[ -w /etc ]]; then
+            print_success "Permissions d'écriture dans /etc OK"
+        else
+            print_success "Permissions d'écriture dans /etc disponibles (root)"
+        fi
     else
-        print_success "Permissions d'écriture dans /var/www (sudo requis pour installation)"
-    fi
-    
-    print_test "Test d'écriture dans /etc..."
-    if [[ $EUID -eq 0 ]]; then
-        # Si root, on peut écrire dans /etc
-        print_success "Permissions d'écriture dans /etc OK (root)"
-    elif [[ -w /etc ]]; then
-        # Si le répertoire est accessible en écriture
-        print_success "Permissions d'écriture dans /etc OK"
-    else
-        # Pas de permissions, mais c'est normal en non-root
+        print_warning "Script de test exécuté sans privilèges root"
+        print_success "L'installation nécessitera 'sudo' (recommandé)"
+        
+        print_test "Test d'écriture dans /var/www..."
+        if [[ -w /var/www ]] 2>/dev/null; then
+            print_success "Permissions d'écriture dans /var/www OK"
+        else
+            print_success "Permissions d'écriture dans /var/www (sudo requis)"
+        fi
+        
+        print_test "Test d'écriture dans /etc..."
         print_success "Permissions d'écriture dans /etc (sudo requis pour installation)"
     fi
 }
