@@ -448,6 +448,7 @@ export default function HomePage() {
                         value={contactForm.email}
                         onChange={handleInputChange}
                         placeholder="votre@email.com"
+                        maxLength={254}
                         required
                       />
                     </div>
