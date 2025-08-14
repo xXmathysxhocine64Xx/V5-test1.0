@@ -307,29 +307,36 @@ export default function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {services.map((service, index) => (
-              <Card key={index} className="hover:shadow-xl transition-shadow duration-300 border-0 shadow-lg">
-                <CardHeader className="text-center">
-                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <service.icon className="w-8 h-8 text-blue-600" />
-                  </div>
-                  <CardTitle className="text-xl mb-2">{service.title}</CardTitle>
-                  <CardDescription className="text-slate-600">
-                    {service.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {service.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-center text-sm text-slate-600">
-                        <Zap className="w-4 h-4 text-blue-600 mr-2" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
+            {services.map((service, index) => {
+              // Dynamic icon mapping
+              const IconComponent = service.icon === 'Code2' ? Code2 : 
+                                   service.icon === 'Rocket' ? Rocket : 
+                                   service.icon === 'RefreshCw' ? RefreshCw : Code2
+              
+              return (
+                <Card key={service.id || index} className="hover:shadow-xl transition-shadow duration-300 border-0 shadow-lg">
+                  <CardHeader className="text-center">
+                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <IconComponent className="w-8 h-8 text-blue-600" />
+                    </div>
+                    <CardTitle className="text-xl mb-2">{service.title}</CardTitle>
+                    <CardDescription className="text-slate-600">
+                      {service.description}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2">
+                      {service.features?.map((feature, idx) => (
+                        <li key={idx} className="flex items-center text-sm text-slate-600">
+                          <Zap className="w-4 h-4 text-blue-600 mr-2" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              )
+            })}
           </div>
         </div>
       </section>
