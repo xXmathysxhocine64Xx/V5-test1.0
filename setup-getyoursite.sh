@@ -827,11 +827,25 @@ run_tests() {
     sleep 5
     
     # Test PM2
+    if ! command -v pm2 &> /dev/null; then
+        print_error "PM2: Non installé - réinstallation..."
+        npm install -g pm2
+        sleep 2
+    fi
+    
     if pm2 list | grep -q "$PROJECT_NAME.*online"; then
         print_success "PM2: Application en ligne"
     else
-        print_warning "PM2: Problème détecté"
-        pm2 logs "$PROJECT_NAME" --lines 10
+        print_warning "PM2: Problème détecté - tentative de redémarrage..."
+        pm2 delete "$PROJECT_NAME" 2>/dev/null || true
+        pm2 start ecosystem.config.js
+        sleep 3
+        if pm2 list | grep -q "$PROJECT_NAME.*online"; then
+            print_success "PM2: Application redémarrée avec succès"
+        else
+            print_error "PM2: Échec du redémarrage"
+            pm2 logs "$PROJECT_NAME" --lines 10
+        fi
     fi
     
     # Test Nginx
