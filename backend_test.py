@@ -265,7 +265,7 @@ class BackendTester:
             if response.status_code == 200:
                 result = response.json()
                 if result.get('success'):
-                    self.log_test("Update Publication", True, f"Successfully updated publication {publication_id}", updates)
+                    self.log_test("Update Publication", True, f"Successfully updated publication {publication_id} with updates: {updates}")
                     return True
                 else:
                     self.log_test("Update Publication", False, "Update response missing success flag", result)
