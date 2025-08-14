@@ -213,7 +213,7 @@ class BackendTester:
             
             if response.status_code == 200:
                 publications = response.json()
-                self.log_test("Get Admin Publications", True, f"Retrieved {len(publications)} publications", f"Count: {len(publications)}")
+                self.log_test("Get Admin Publications", True, f"Retrieved {len(publications)} publications - Count: {len(publications)}")
                 return publications
             else:
                 self.log_test("Get Admin Publications", False, f"Failed with status {response.status_code}", response.text)
