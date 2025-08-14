@@ -214,6 +214,36 @@ export async function GET(request) {
       return NextResponse.json(messages);
     }
 
+    // Public: Get published publications
+    if (pathname.includes('/api/publications') && !pathname.includes('/api/admin/')) {
+      const database = await connectToDatabase();
+      const publications = await database.collection('publications')
+        .find({ status: 'published' })
+        .sort({ publishedAt: -1 })
+        .limit(10)
+        .toArray();
+      
+      return NextResponse.json(publications);
+    }
+
+    // Admin: Get all publications
+    if (pathname.includes('/api/admin/publications')) {
+      const token = request.headers.get('authorization')?.replace('Bearer ', '');
+      const decoded = verifyToken(token);
+      
+      if (!decoded) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+      
+      const database = await connectToDatabase();
+      const publications = await database.collection('publications')
+        .find({})
+        .sort({ createdAt: -1 })
+        .toArray();
+      
+      return NextResponse.json(publications);
+    }
+
   } catch (error) {
     console.error('GET error:', error);
   }
