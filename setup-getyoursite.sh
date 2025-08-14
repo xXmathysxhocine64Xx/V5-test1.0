@@ -864,7 +864,6 @@ show_final_info() {
     echo "   • Projet : $PROJECT_DIR"
     echo "   • Configuration : $PROJECT_DIR/.env.local"
     echo "   • Logs : /var/log/pm2/ et /var/log/nginx/"
-    echo "   • Sauvegardes : $BACKUP_DIR"
     echo
     
     if [[ "$GMAIL_USER" != "votre-email@gmail.com" ]]; then
