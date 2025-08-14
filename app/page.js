@@ -242,6 +242,9 @@ export default function HomePage() {
               <a href="#services" className="text-slate-600 hover:text-blue-600 transition-colors">Services</a>
               <a href="#portfolio" className="text-slate-600 hover:text-blue-600 transition-colors">Portfolio</a>
               <a href="#contact" className="text-slate-600 hover:text-blue-600 transition-colors">Contact</a>
+              {publications.length > 0 && (
+                <a href="#publications" className="text-slate-600 hover:text-blue-600 transition-colors">Publications</a>
+              )}
             </div>
 
             <Button 
