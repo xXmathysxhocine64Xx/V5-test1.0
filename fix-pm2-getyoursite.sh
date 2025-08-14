@@ -108,12 +108,16 @@ module.exports = {
     max_memory_restart: '1G',
     env: {
       NODE_ENV: 'production',
-      PORT: 3000
+      PORT: 3000,
+      HOSTNAME: '0.0.0.0'
     },
     error_file: '/var/log/pm2/${PROJECT_NAME}-error.log',
     out_file: '/var/log/pm2/${PROJECT_NAME}-out.log',
     log_file: '/var/log/pm2/${PROJECT_NAME}.log',
-    time: true
+    time: true,
+    kill_timeout: 5000,
+    wait_ready: true,
+    listen_timeout: 10000
   }]
 }
 EOF
