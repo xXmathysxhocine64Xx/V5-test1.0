@@ -85,6 +85,28 @@ if [[ ! -d ".next" ]]; then
     fi
 else
     print_success "Build Next.js trouvé"
+    # Vérifier si le build est récent (moins de 24h)
+    if [[ $(find .next -name "BUILD_ID" -mtime +1) ]]; then
+        print_warning "Build Next.js ancien - reconstruction recommandée..."
+        yarn build
+        print_success "Build Next.js mis à jour"
+    fi
+fi
+
+# 3.1 Vérifier que yarn start fonctionne
+print_step "Test de démarrage Next.js..."
+timeout 10s yarn start > /tmp/nextjs-test.log 2>&1 &
+NEXTJS_PID=$!
+sleep 5
+
+if curl -s http://localhost:3000 > /dev/null 2>&1; then
+    print_success "Next.js démarre correctement"
+    kill $NEXTJS_PID 2>/dev/null || true
+else
+    print_error "Next.js ne démarre pas - vérifiez les logs:"
+    cat /tmp/nextjs-test.log
+    kill $NEXTJS_PID 2>/dev/null || true
+    exit 1
 fi
 
 # 4. Arrêter et nettoyer PM2
