@@ -257,12 +257,11 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <h1 className="text-4xl md:text-6xl font-bold text-slate-800 leading-tight">
-                Créez votre
-                <span className="text-blue-600 block">présence en ligne</span>
+                {hero.title}
+                <span className="text-blue-600 block">{hero.subtitle}</span>
               </h1>
               <p className="text-xl text-slate-600 max-w-lg">
-                Expert en conception, déploiement et refonte de sites web pour particuliers 
-                et professionnels. Transformez vos idées en réalité digitale.
+                {hero.description}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                 <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
@@ -274,25 +273,19 @@ export default function HomePage() {
               </div>
               
               <div className="flex items-center gap-8 justify-center md:justify-start pt-8">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-slate-800">50+</div>
-                  <div className="text-sm text-slate-600">Sites créés</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-slate-800">100%</div>
-                  <div className="text-sm text-slate-600">Satisfaction client</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-slate-800">24h</div>
-                  <div className="text-sm text-slate-600">Support</div>
-                </div>
+                {hero.stats?.map((stat, index) => (
+                  <div key={index} className="text-center">
+                    <div className="text-2xl font-bold text-slate-800">{stat.number}</div>
+                    <div className="text-sm text-slate-600">{stat.label}</div>
+                  </div>
+                ))}
               </div>
             </div>
             
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-2xl transform rotate-3"></div>
               <img 
-                src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b" 
+                src={hero.image || "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"} 
                 alt="Développement web"
                 className="relative rounded-2xl shadow-2xl w-full h-96 object-cover"
               />
