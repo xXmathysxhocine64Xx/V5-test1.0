@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Création d'un site vitrine GetYourSite avec formulaire de contact Gmail pour une agence de développement web. Site avec sections: Hero, Services (conception/déploiement/refonte), Portfolio, Contact avec envoi d'emails via Gmail SMTP."
+user_problem_statement: "Création d'un site vitrine GetYourSite avec formulaire de contact Gmail pour une agence de développement web. Site avec sections: Hero, Services (conception/déploiement/refonte), Portfolio, Contact avec envoi d'emails via Gmail SMTP. NOUVEAU : Ajout d'un système de gestion des publications dans l'admin panel pour publier des annonces officielles sur le site."
 
 backend:
   - task: "API Contact Form Handler"
