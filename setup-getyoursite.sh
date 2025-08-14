@@ -927,7 +927,6 @@ main() {
     setup_nginx
     setup_firewall
     fix_permissions
-    setup_backups
     run_tests
     show_final_info
     
