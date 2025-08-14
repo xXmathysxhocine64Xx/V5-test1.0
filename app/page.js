@@ -24,6 +24,7 @@ import {
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [siteContent, setSiteContent] = useState(null)
+  const [publications, setPublications] = useState([])
   const [contactForm, setContactForm] = useState({
     name: '',
     email: '',
