@@ -262,6 +262,9 @@ export default function HomePage() {
               <a href="#services" className="block py-2 text-slate-600 hover:text-blue-600">Services</a>
               <a href="#portfolio" className="block py-2 text-slate-600 hover:text-blue-600">Portfolio</a>
               <a href="#contact" className="block py-2 text-slate-600 hover:text-blue-600">Contact</a>
+              {publications.length > 0 && (
+                <a href="#publications" className="block py-2 text-slate-600 hover:text-blue-600">Publications</a>
+              )}
             </div>
           )}
         </div>
