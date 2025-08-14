@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Security Testing Suite for GetYourSite Contact Form
-Tests all security measures implemented in the backend API
+Comprehensive Backend Testing for GetYourSite PM2 Fix Verification
+Testing all functionality mentioned in the review request including security measures.
 """
 
 import requests
@@ -10,7 +10,7 @@ import time
 import sys
 from datetime import datetime
 
-# Get base URL from environment - using localhost due to external URL 502 issues
+# Test configuration - using localhost due to external URL 502 issues
 BASE_URL = "http://localhost:3000"
 CONTACT_API = f"{BASE_URL}/api/contact"
 
