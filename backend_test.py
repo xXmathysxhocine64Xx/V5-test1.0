@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-GetYourSite Admin Panel Backend Testing Suite
-Tests all admin authentication, JWT verification, content management, and message management APIs
+GetYourSite Backend Testing Suite - Publications Management System
+Tests all admin authentication, JWT verification, content management, message management, and NEW PUBLICATIONS MANAGEMENT APIs
 """
 
 import requests
@@ -10,14 +10,14 @@ import time
 import os
 from datetime import datetime
 
-# Configuration
-BASE_URL = "http://localhost:3000"  # Using localhost due to external URL 502 issues
+# Configuration - Using external URL as specified in review request
+BASE_URL = "https://publication-hub.preview.emergentagent.com"
 API_BASE = f"{BASE_URL}/api"
 
 # Admin credentials from review request
 ADMIN_CREDENTIALS = {
     "username": "admin_getyoursite",
-    "password": "GYS2024!SecurePanel#"
+    "password": "AdminGYS2024"  # Updated to match .env file
 }
 
 class AdminPanelTester:
