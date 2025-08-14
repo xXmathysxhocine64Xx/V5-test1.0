@@ -144,7 +144,7 @@ class BackendTester:
                 if result.get('success') and result.get('publication'):
                     publication = result['publication']
                     self.created_publications.append(publication['id'])
-                    self.log_test(f"Create Publication ({status})", True, f"Created publication: {title}", f"ID: {publication['id']}")
+                    self.log_test(f"Create Publication ({status})", True, f"Created publication: {title} - ID: {publication['id']}")
                     return publication
                 else:
                     self.log_test(f"Create Publication ({status})", False, "Response missing publication data", result)
