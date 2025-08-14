@@ -151,6 +151,7 @@ export default function AdminPanel() {
         setIsAuthenticated(true)
         loadSiteContent()
         loadContactMessages()
+        loadPublications()
       } else {
         setLoginError('Identifiants incorrects')
       }
