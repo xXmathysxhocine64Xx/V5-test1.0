@@ -23,6 +23,7 @@ import {
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [siteContent, setSiteContent] = useState(null)
   const [contactForm, setContactForm] = useState({
     name: '',
     email: '',
@@ -32,47 +33,94 @@ export default function HomePage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(null)
 
-  const services = [
-    {
-      icon: Code2,
-      title: "Conception Web",
-      description: "Création sur mesure de sites web modernes et performants, adaptés à vos besoins et votre identité visuelle.",
-      features: ["Design responsive", "UX/UI optimisée", "Technologies modernes"]
-    },
-    {
-      icon: Rocket,
-      title: "Déploiement",
-      description: "Mise en ligne professionnelle avec hébergement sécurisé, nom de domaine et optimisation des performances.",
-      features: ["Hébergement sécurisé", "Configuration SSL", "Optimisation SEO"]
-    },
-    {
-      icon: RefreshCw,
-      title: "Refonte",
-      description: "Modernisation de votre site existant pour améliorer les performances, le design et l'expérience utilisateur.",
-      features: ["Audit complet", "Amélioration design", "Optimisation technique"]
+  // Load site content on mount
+  useEffect(() => {
+    const loadContent = async () => {
+      try {
+        const response = await fetch('/api/content')
+        const data = await response.json()
+        setSiteContent(data)
+      } catch (error) {
+        console.error('Failed to load content:', error)
+        // Fallback to default content if API fails
+        setSiteContent(getDefaultContent())
+      }
     }
-  ]
+    
+    loadContent()
+  }, [])
 
-  const portfolio = [
-    {
-      title: "Site E-commerce",
-      category: "Conception",
-      description: "Boutique en ligne complète avec paiement sécurisé",
-      image: "https://images.unsplash.com/photo-1591439657848-9f4b9ce436b9"
+  // Default content fallback
+  const getDefaultContent = () => ({
+    hero: {
+      title: "Créez votre",
+      subtitle: "présence en ligne", 
+      description: "Expert en conception, déploiement et refonte de sites web pour particuliers et professionnels. Transformez vos idées en réalité digitale.",
+      image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      stats: [
+        { number: "50+", label: "Sites créés" },
+        { number: "100%", label: "Satisfaction client" },
+        { number: "24h", label: "Support" }
+      ]
     },
-    {
-      title: "Portfolio Professionnel", 
-      category: "Refonte",
-      description: "Refonte complète d'un portfolio d'architecte",
-      image: "https://images.unsplash.com/photo-1544717297-fa95b6ee9643"
-    },
-    {
-      title: "Application Web",
-      category: "Déploiement",
-      description: "Déploiement d'une application de gestion",
-      image: "https://images.unsplash.com/photo-1613203713329-b2e39e14c266"
+    services: [
+      {
+        id: "conception",
+        icon: "Code2",
+        title: "Conception Web",
+        description: "Création sur mesure de sites web modernes et performants, adaptés à vos besoins et votre identité visuelle.",
+        features: ["Design responsive", "UX/UI optimisée", "Technologies modernes"]
+      },
+      {
+        id: "deploiement", 
+        icon: "Rocket",
+        title: "Déploiement",
+        description: "Mise en ligne professionnelle avec hébergement sécurisé, nom de domaine et optimisation des performances.",
+        features: ["Hébergement sécurisé", "Configuration SSL", "Optimisation SEO"]
+      },
+      {
+        id: "refonte",
+        icon: "RefreshCw", 
+        title: "Refonte",
+        description: "Modernisation de votre site existant pour améliorer les performances, le design et l'expérience utilisateur.",
+        features: ["Audit complet", "Amélioration design", "Optimisation technique"]
+      }
+    ],
+    portfolio: [
+      {
+        id: "ecommerce",
+        title: "Site E-commerce",
+        category: "Conception",
+        description: "Boutique en ligne complète avec paiement sécurisé",
+        image: "https://images.unsplash.com/photo-1591439657848-9f4b9ce436b9"
+      },
+      {
+        id: "portfolio-pro",
+        title: "Portfolio Professionnel", 
+        category: "Refonte",
+        description: "Refonte complète d'un portfolio d'architecte",
+        image: "https://images.unsplash.com/photo-1544717297-fa95b6ee9643"
+      },
+      {
+        id: "app-web",
+        title: "Application Web",
+        category: "Déploiement",
+        description: "Déploiement d'une application de gestion",
+        image: "https://images.unsplash.com/photo-1613203713329-b2e39e14c266"
+      }
+    ],
+    contact: {
+      email: "contact@getyoursite.com",
+      phone: "+33 (0)1 23 45 67 89",
+      location: "France"
     }
-  ]
+  })
+
+  // Get dynamic data or fallback to defaults
+  const services = siteContent?.services || getDefaultContent().services
+  const portfolio = siteContent?.portfolio || getDefaultContent().portfolio
+  const hero = siteContent?.hero || getDefaultContent().hero
+  const contact = siteContent?.contact || getDefaultContent().contact
 
   // Enhanced validation function
   const validateForm = () => {
