@@ -1305,7 +1305,7 @@ export default function AdminPanel() {
                         </div>
                       </div>
                     </div>
-                  ))}
+                  )) : null}}
                   
                   {contactMessages.length === 0 && (
                     <div className="text-center py-8 text-slate-500">
