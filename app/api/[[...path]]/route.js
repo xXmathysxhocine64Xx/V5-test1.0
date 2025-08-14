@@ -542,6 +542,62 @@ export async function PUT(request) {
       return NextResponse.json({ success: true });
     }
 
+    // Update publication
+    if (pathname.includes('/api/admin/publications/')) {
+      const publicationId = pathname.split('/').pop();
+      const { title, content, author, status } = body;
+      
+      // Validation
+      if (!validateInput(title, 200)) {
+        return NextResponse.json(
+          { error: 'Le titre est requis et doit contenir moins de 200 caractères' },
+          { status: 400 }
+        );
+      }
+      
+      if (!validateInput(content, 5000)) {
+        return NextResponse.json(
+          { error: 'Le contenu est requis et doit contenir moins de 5000 caractères' },
+          { status: 400 }
+        );
+      }
+
+      if (!validateInput(author, 100)) {
+        return NextResponse.json(
+          { error: 'L\'auteur est requis et doit contenir moins de 100 caractères' },
+          { status: 400 }
+        );
+      }
+
+      if (status && !['draft', 'published'].includes(status)) {
+        return NextResponse.json(
+          { error: 'Le statut doit être "draft" ou "published"' },
+          { status: 400 }
+        );
+      }
+
+      // Update publication
+      const updateData = {
+        title: sanitizeHtml(title),
+        content: sanitizeHtml(content),
+        author: sanitizeHtml(author),
+        status: status,
+        updatedAt: new Date()
+      };
+
+      // Set publishedAt if status changes to published
+      if (status === 'published') {
+        updateData.publishedAt = new Date();
+      }
+
+      await database.collection('publications').updateOne(
+        { id: publicationId },
+        { $set: updateData }
+      );
+      
+      return NextResponse.json({ success: true, message: 'Publication mise à jour' });
+    }
+
     return NextResponse.json({
       message: 'PUT endpoint active',
       timestamp: new Date().toISOString()
