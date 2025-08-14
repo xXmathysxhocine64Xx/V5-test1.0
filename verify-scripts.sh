@@ -2,7 +2,7 @@
 echo '🧪 Vérification de la syntaxe des scripts...'
 echo
 
-for script in setup-getyoursite.sh test-installation.sh diagnostic-getyoursite.sh; do
+for script in setup-getyoursite.sh test-installation.sh diagnostic-getyoursite.sh test-nginx-config.sh test-permissions.sh; do
     echo -n "Vérification de $script... "
     if bash -n $script; then
         echo "✅ OK"
