@@ -60,7 +60,7 @@ export async function GET(request) {
   const path = searchParams.get('path') || 'API de GetYourSite';
   
   return NextResponse.json({
-    message: `Bienvenue sur l'API de GetYourSite`,
+    message: `API GetYourSite active`,
     path: path,
     timestamp: new Date().toISOString(),
     status: 'active'
