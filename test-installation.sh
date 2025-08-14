@@ -53,9 +53,22 @@ test_system() {
                 print_error "Ubuntu $VERSION_ID détecté (version trop ancienne, >= 20.04 requis)"
                 return 1
             fi
+        elif [[ "$ID" == "debian" ]]; then
+            local version_number
+            version_number=$(echo "$VERSION_ID" | cut -d. -f1)
+            if [[ "$version_number" -ge 10 ]]; then
+                print_success "Debian $VERSION_ID détecté (compatible Ubuntu)"
+            else
+                print_warning "Debian $VERSION_ID détecté (compatibilité non garantie)"
+            fi
         else
             print_error "Système non-Ubuntu détecté: $ID"
-            return 1
+            print_warning "Ce script est optimisé pour Ubuntu 20.04+ mais peut fonctionner sur Debian"
+            read -p "Continuer quand même ? (y/N): " -n 1 -r
+            echo
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                return 1
+            fi
         fi
     else
         print_error "Impossible de détecter le système d'exploitation"
