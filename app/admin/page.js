@@ -1261,7 +1261,7 @@ export default function AdminPanel() {
               <CardHeader>
                 <CardTitle>Messages de Contact</CardTitle>
                 <CardDescription>
-                  {(contactMessages || []).length} message(s) reçu(s) - {(contactMessages || []).filter(m => !m.read).length} non lu(s)
+                  {contactMessages && Array.isArray(contactMessages) ? contactMessages.length : 0} message(s) reçu(s) - {contactMessages && Array.isArray(contactMessages) ? contactMessages.filter(m => !m.read).length : 0} non lu(s)
                 </CardDescription>
               </CardHeader>
               <CardContent>
