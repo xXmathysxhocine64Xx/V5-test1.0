@@ -575,7 +575,7 @@ export default function HomePage() {
 
       {/* Publications Section */}
       {publications.length > 0 && (
-        <section className="py-20 px-4 bg-slate-50">
+        <section id="publications" className="py-20 px-4 bg-slate-50">
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">
