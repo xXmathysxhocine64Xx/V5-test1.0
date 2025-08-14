@@ -639,6 +639,17 @@ export async function DELETE(request) {
       return NextResponse.json({ success: true, message: 'Message supprimé' });
     }
 
+    // Delete publication
+    if (pathname.includes('/api/admin/publications/')) {
+      const publicationId = pathname.split('/').pop();
+      
+      await database.collection('publications').deleteOne(
+        { id: publicationId }
+      );
+      
+      return NextResponse.json({ success: true, message: 'Publication supprimée' });
+    }
+
     return NextResponse.json({
       message: 'DELETE endpoint active',
       timestamp: new Date().toISOString()
