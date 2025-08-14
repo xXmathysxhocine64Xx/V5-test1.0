@@ -434,6 +434,7 @@ export default function HomePage() {
                         value={contactForm.name}
                         onChange={handleInputChange}
                         placeholder="Votre nom"
+                        maxLength={100}
                         required
                       />
                     </div>
