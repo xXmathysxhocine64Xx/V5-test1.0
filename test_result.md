@@ -288,17 +288,77 @@ backend:
           agent: "testing"
           comment: "✅ MESSAGE MANAGEMENT TESTED: All message management APIs working perfectly. GET /api/admin/messages retrieves contact messages with authentication. PUT /api/admin/messages/read marks messages as read. DELETE /api/admin/messages/{id} deletes messages. All operations require admin authentication and return proper success responses."
 
-  - task: "Database Initialization"
+  - task: "Publications Management API - Public Endpoint"
     implemented: true
     working: true
     file: "app/api/[[...path]]/route.js"
     stuck_count: 0
-    priority: "medium"
+    priority: "high"
     needs_retesting: false
     status_history:
         - working: true
           agent: "testing"
-          comment: "✅ DATABASE INITIALIZATION TESTED: Automatic database content initialization working perfectly. Default content properly created with all required fields (hero, services, portfolio, contact) when accessing /api/content. MongoDB connection established successfully and content structure validated."
+          comment: "✅ PUBLICATIONS TESTING COMPLETE: Public publications API (GET /api/publications) working perfectly. Returns only published publications (1 out of 2 test publications), correctly sorted by publishedAt, limited to 10 results, and requires no authentication. All publications returned have status 'published' as expected."
+
+  - task: "Publications Management API - Admin Endpoints"
+    implemented: true
+    working: true
+    file: "app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ ADMIN PUBLICATIONS TESTING COMPLETE: All admin publications endpoints working perfectly. GET /api/admin/publications retrieves all publications (2 total including drafts), POST creates publications with proper validation, PUT updates publications including status changes, DELETE removes publications. All operations require admin authentication and work correctly."
+
+  - task: "Publications Authentication & Security"
+    implemented: true
+    working: true
+    file: "app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ PUBLICATIONS SECURITY VERIFIED: All admin publications endpoints correctly require authentication. Unauthorized access properly blocked with 401 status for GET, POST, PUT, DELETE operations. Admin authentication with admin_getyoursite / AdminGYS2024 credentials working perfectly."
+
+  - task: "Publications Validation System"
+    implemented: true
+    working: true
+    file: "app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ PUBLICATIONS VALIDATION VERIFIED: Comprehensive validation system working perfectly. Correctly rejects empty title/content/author, enforces field length limits (title: 200, content: 5000, author: 100 chars), validates status values (draft/published only). All validation returns proper 400 status with French error messages."
+
+  - task: "Publications Status Management"
+    implemented: true
+    working: true
+    file: "app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ PUBLICATIONS STATUS MANAGEMENT VERIFIED: Status management working perfectly. Draft publications correctly excluded from public API, published publications appear in public API. Status updates from draft to published work correctly - publication immediately appears in public endpoint after status change. publishedAt timestamp properly set when status changes to published."
+
+  - task: "Publications CRUD Operations"
+    implemented: true
+    working: true
+    file: "app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ PUBLICATIONS CRUD VERIFIED: All CRUD operations working perfectly. CREATE: Publications created with timestamp-based IDs, proper data structure, and correct status handling. READ: Admin endpoint retrieves all publications, public endpoint filters by status. UPDATE: Publications updated correctly with proper validation. DELETE: Publications deleted successfully. All operations return proper success responses."
 
 frontend:
   - task: "Contact Form Component"
