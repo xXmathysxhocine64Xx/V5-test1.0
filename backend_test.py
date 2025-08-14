@@ -48,12 +48,18 @@ class AdminPanelTester:
         print("🔐 Testing Admin Authentication...")
         
         try:
+            # Debug: Check what credentials we're sending
+            print(f"   Sending credentials: {ADMIN_CREDENTIALS}")
+            
             response = self.session.post(
                 f"{API_BASE}/admin/login",
                 json=ADMIN_CREDENTIALS,
                 headers={"Content-Type": "application/json"},
                 timeout=10
             )
+            
+            print(f"   Response status: {response.status_code}")
+            print(f"   Response body: {response.text}")
             
             if response.status_code == 200:
                 data = response.json()
