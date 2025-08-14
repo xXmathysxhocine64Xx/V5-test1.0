@@ -69,6 +69,7 @@ export default function AdminPanel() {
           setIsAuthenticated(true)
           loadSiteContent()
           loadContactMessages()
+          loadPublications()
           return
         }
       }
