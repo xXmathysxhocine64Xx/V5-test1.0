@@ -982,6 +982,201 @@ export default function AdminPanel() {
 
           {/* Contact Information Management */}
           <TabsContent value="contact">
+
+          {/* Publications Management */}
+          <TabsContent value="publications">
+            <div className="space-y-6">
+              {/* Publications Header */}
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <div>
+                    <CardTitle>Gestion des Publications</CardTitle>
+                    <CardDescription>
+                      Créez et gérez les publications officielles qui apparaîtront sur le site
+                    </CardDescription>
+                  </div>
+                  <Button 
+                    onClick={() => setShowPublicationForm(!showPublicationForm)}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    {showPublicationForm ? 'Fermer' : 'Nouvelle publication'}
+                  </Button>
+                </CardHeader>
+              </Card>
+
+              {/* Publication Form */}
+              {showPublicationForm && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>
+                      {editingPublication ? 'Modifier la publication' : 'Nouvelle publication'}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <form onSubmit={handlePublicationSubmit} className="space-y-4">
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Titre *</label>
+                          <Input
+                            value={publicationForm.title}
+                            onChange={(e) => setPublicationForm({ ...publicationForm, title: e.target.value })}
+                            maxLength={200}
+                            required
+                            placeholder="Titre de la publication"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Auteur *</label>
+                          <Input
+                            value={publicationForm.author}
+                            onChange={(e) => setPublicationForm({ ...publicationForm, author: e.target.value })}
+                            maxLength={100}
+                            required
+                            placeholder="Nom de l'auteur"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Contenu *</label>
+                        <Textarea
+                          value={publicationForm.content}
+                          onChange={(e) => setPublicationForm({ ...publicationForm, content: e.target.value })}
+                          rows={8}
+                          maxLength={5000}
+                          required
+                          placeholder="Contenu de la publication..."
+                        />
+                        <p className="text-xs text-slate-500 mt-1">
+                          {publicationForm.content.length}/5000 caractères
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Statut</label>
+                        <select 
+                          value={publicationForm.status}
+                          onChange={(e) => setPublicationForm({ ...publicationForm, status: e.target.value })}
+                          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="draft">Brouillon (non visible sur le site)</option>
+                          <option value="published">Publié (visible sur le site)</option>
+                        </select>
+                      </div>
+
+                      <div className="flex gap-4">
+                        <Button type="submit" className="bg-green-600 hover:bg-green-700">
+                          <Save className="w-4 h-4 mr-2" />
+                          {editingPublication ? 'Mettre à jour' : 'Créer la publication'}
+                        </Button>
+                        <Button 
+                          type="button"
+                          variant="outline"
+                          onClick={resetPublicationForm}
+                        >
+                          Annuler
+                        </Button>
+                      </div>
+                    </form>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Publications List */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Publications ({publications.length})</CardTitle>
+                  <CardDescription>
+                    {publications.filter(p => p.status === 'published').length} publiée(s), {publications.filter(p => p.status === 'draft').length} brouillon(s)
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {publications.length === 0 ? (
+                      <div className="text-center py-8 text-slate-500">
+                        <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                        <p>Aucune publication créée pour le moment</p>
+                        <Button 
+                          onClick={() => setShowPublicationForm(true)}
+                          className="mt-4"
+                          variant="outline"
+                        >
+                          Créer votre première publication
+                        </Button>
+                      </div>
+                    ) : (
+                      publications.map((publication) => (
+                        <div 
+                          key={publication.id}
+                          className={`border rounded-lg p-4 ${
+                            publication.status === 'published' ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'
+                          }`}
+                        >
+                          <div className="flex justify-between items-start mb-3">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <h3 className="font-semibold text-lg">{publication.title}</h3>
+                                <Badge variant={publication.status === 'published' ? 'default' : 'secondary'}>
+                                  {publication.status === 'published' ? 'Publié' : 'Brouillon'}
+                                </Badge>
+                              </div>
+                              <p className="text-sm text-slate-600 mb-2">
+                                Par <strong>{publication.author}</strong> • {new Date(publication.createdAt).toLocaleDateString('fr-FR')}
+                                {publication.publishedAt && (
+                                  <> • Publié le {new Date(publication.publishedAt).toLocaleDateString('fr-FR')}</>
+                                )}
+                              </p>
+                              <p className="text-slate-700 line-clamp-3">{publication.content}</p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex gap-2 pt-3 border-t">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleEditPublication(publication)}
+                            >
+                              <Edit className="w-3 h-3 mr-1" />
+                              Modifier
+                            </Button>
+                            
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => togglePublicationStatus(publication)}
+                            >
+                              {publication.status === 'published' ? (
+                                <>
+                                  <EyeOff className="w-3 h-3 mr-1" />
+                                  Mettre en brouillon
+                                </>
+                              ) : (
+                                <>
+                                  <Eye className="w-3 h-3 mr-1" />
+                                  Publier
+                                </>
+                              )}
+                            </Button>
+                            
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleDeletePublication(publication.id)}
+                              className="text-red-600 hover:text-red-700 hover:border-red-300"
+                            >
+                              <Trash2 className="w-3 h-3 mr-1" />
+                              Supprimer
+                            </Button>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
             {siteContent && (
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
