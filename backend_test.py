@@ -236,7 +236,7 @@ class BackendTester:
                 # Verify all returned publications are published
                 all_published = all(pub.get('status') == 'published' for pub in publications)
                 if all_published:
-                    self.log_test("Get Public Publications", True, f"Retrieved {len(publications)} published publications", f"All {len(publications)} publications have status 'published'")
+                    self.log_test("Get Public Publications", True, f"Retrieved {len(publications)} published publications - All {len(publications)} publications have status 'published'")
                 else:
                     self.log_test("Get Public Publications", False, "Some publications are not published", publications)
                 return publications
