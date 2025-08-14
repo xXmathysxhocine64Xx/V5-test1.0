@@ -463,6 +463,7 @@ export default function HomePage() {
                       value={contactForm.subject}
                       onChange={handleInputChange}
                       placeholder="Sujet de votre demande"
+                      maxLength={200}
                     />
                   </div>
 
