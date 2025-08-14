@@ -1266,7 +1266,7 @@ export default function AdminPanel() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {contactMessages.map(message => (
+                  {(contactMessages || []).map(message => (
                     <div 
                       key={message._id} 
                       className={`border rounded p-4 ${!message.read ? 'bg-blue-50 border-blue-200' : 'bg-slate-50'}`}
