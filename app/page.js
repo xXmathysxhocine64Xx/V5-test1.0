@@ -47,8 +47,20 @@ export default function HomePage() {
         setSiteContent(getDefaultContent())
       }
     }
+
+    const loadPublications = async () => {
+      try {
+        const response = await fetch('/api/publications')
+        const data = await response.json()
+        setPublications(data || [])
+      } catch (error) {
+        console.error('Failed to load publications:', error)
+        setPublications([])
+      }
+    }
     
     loadContent()
+    loadPublications()
   }, [])
 
   // Default content fallback
