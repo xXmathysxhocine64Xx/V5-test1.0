@@ -870,7 +870,7 @@ show_final_info() {
         echo -e "${GREEN}✅ Gmail configuré pour : $GMAIL_USER${NC}"
     else
         echo -e "${YELLOW}⚠️  Configuration Gmail requise pour le formulaire de contact${NC}"
-        echo "   Modifiez le fichier : $PROJECT_DIR/.env.local"
+        echo "   Modifiez le fichier : $PROJECT_DIR/.env"
         echo "   Puis redémarrez : pm2 restart $PROJECT_NAME"
     fi
     
