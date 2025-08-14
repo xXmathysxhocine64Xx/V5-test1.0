@@ -32,12 +32,23 @@ export default function AdminPanel() {
   const [loginForm, setLoginForm] = useState({ username: '', password: '' })
   const [loginError, setLoginError] = useState('')
   
-  // Content states
+  // Contact states
   const [siteContent, setSiteContent] = useState(null)
   const [contactMessages, setContactMessages] = useState([])
+  const [publications, setPublications] = useState([])
   const [editingSection, setEditingSection] = useState(null)
   const [tempContent, setTempContent] = useState({})
   const [saveStatus, setSaveStatus] = useState('')
+  
+  // Publication form states
+  const [showPublicationForm, setShowPublicationForm] = useState(false)
+  const [editingPublication, setEditingPublication] = useState(null)
+  const [publicationForm, setPublicationForm] = useState({
+    title: '',
+    content: '',
+    author: '',
+    status: 'draft'
+  })
 
   // Check authentication on load
   useEffect(() => {
