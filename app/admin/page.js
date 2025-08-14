@@ -344,6 +344,112 @@ export default function AdminPanel() {
     }
   }
 
+  // Publication management functions
+  const resetPublicationForm = () => {
+    setPublicationForm({ title: '', content: '', author: '', status: 'draft' })
+    setEditingPublication(null)
+    setShowPublicationForm(false)
+  }
+
+  const handlePublicationSubmit = async (e) => {
+    e.preventDefault()
+    
+    try {
+      const token = localStorage.getItem('admin_token')
+      const url = editingPublication 
+        ? `/api/admin/publications/${editingPublication.id}`
+        : '/api/admin/publications'
+      
+      const method = editingPublication ? 'PUT' : 'POST'
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(publicationForm)
+      })
+
+      if (response.ok) {
+        setSaveStatus(editingPublication ? 'Publication mise à jour !' : 'Publication créée !')
+        resetPublicationForm()
+        loadPublications()
+        setTimeout(() => setSaveStatus(''), 2000)
+      } else {
+        const data = await response.json()
+        setSaveStatus(`Erreur: ${data.error || 'Sauvegarde échouée'}`)
+        setTimeout(() => setSaveStatus(''), 3000)
+      }
+    } catch (error) {
+      console.error('Failed to save publication:', error)
+      setSaveStatus('Erreur de connexion')
+      setTimeout(() => setSaveStatus(''), 3000)
+    }
+  }
+
+  const handleEditPublication = (publication) => {
+    setEditingPublication(publication)
+    setPublicationForm({
+      title: publication.title,
+      content: publication.content,
+      author: publication.author,
+      status: publication.status
+    })
+    setShowPublicationForm(true)
+  }
+
+  const handleDeletePublication = async (publicationId) => {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cette publication ?')) return
+
+    try {
+      const token = localStorage.getItem('admin_token')
+      const response = await fetch(`/api/admin/publications/${publicationId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+
+      if (response.ok) {
+        setSaveStatus('Publication supprimée !')
+        loadPublications()
+        setTimeout(() => setSaveStatus(''), 2000)
+      }
+    } catch (error) {
+      console.error('Failed to delete publication:', error)
+      setSaveStatus('Erreur lors de la suppression')
+      setTimeout(() => setSaveStatus(''), 3000)
+    }
+  }
+
+  const togglePublicationStatus = async (publication) => {
+    const newStatus = publication.status === 'published' ? 'draft' : 'published'
+    
+    try {
+      const token = localStorage.getItem('admin_token')
+      const response = await fetch(`/api/admin/publications/${publication.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...publication,
+          status: newStatus
+        })
+      })
+
+      if (response.ok) {
+        loadPublications()
+        setSaveStatus(`Publication ${newStatus === 'published' ? 'publiée' : 'mise en brouillon'} !`)
+        setTimeout(() => setSaveStatus(''), 2000)
+      }
+    } catch (error) {
+      console.error('Failed to toggle status:', error)
+      setSaveStatus('Erreur lors de la mise à jour')
+      setTimeout(() => setSaveStatus(''), 3000)
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
