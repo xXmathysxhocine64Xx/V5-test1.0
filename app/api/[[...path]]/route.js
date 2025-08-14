@@ -239,6 +239,13 @@ export async function POST(request) {
       const body = await request.json();
       const { username, password } = body;
 
+      // Debug logging
+      console.log('Admin login attempt:', { username, password });
+      console.log('Expected credentials:', { 
+        username: process.env.ADMIN_USERNAME, 
+        password: process.env.ADMIN_PASSWORD 
+      });
+
       if (username !== process.env.ADMIN_USERNAME || password !== process.env.ADMIN_PASSWORD) {
         return NextResponse.json(
           { error: 'Identifiants incorrects' },
