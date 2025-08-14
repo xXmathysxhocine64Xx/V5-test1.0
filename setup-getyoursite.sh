@@ -835,40 +835,7 @@ run_tests() {
     fi
 }
 
-# Configuration des sauvegardes automatiques
-setup_backups() {
-    print_step "Configuration des sauvegardes automatiques..."
-    
-    # Créer le répertoire de sauvegarde
-    mkdir -p "$BACKUP_DIR"
-    
-    # Script de sauvegarde
-    cat > /usr/local/bin/backup-getyoursite.sh << EOF
-#!/bin/bash
-# Script de sauvegarde automatique GetYourSite
 
-DATE=\$(date +%Y%m%d_%H%M%S)
-BACKUP_NAME="${PROJECT_NAME}_\${DATE}.tar.gz"
-
-# Créer la sauvegarde
-tar -czf "${BACKUP_DIR}/\${BACKUP_NAME}" \\
-    -C /var/www "${PROJECT_NAME}" \\
-    --exclude="${PROJECT_NAME}/node_modules" \\
-    --exclude="${PROJECT_NAME}/.next"
-
-# Garder seulement les 7 dernières sauvegardes
-find "${BACKUP_DIR}" -name "${PROJECT_NAME}_*.tar.gz" -mtime +7 -delete
-
-echo "[\$(date)] Sauvegarde créée: \${BACKUP_NAME}" >> "${BACKUP_DIR}/backup.log"
-EOF
-
-    chmod +x /usr/local/bin/backup-getyoursite.sh
-    
-    # Ajouter au cron (sauvegarde quotidienne à 2h du matin)
-    (crontab -l 2>/dev/null; echo "0 2 * * * /usr/local/bin/backup-getyoursite.sh") | crontab -
-    
-    print_success "Sauvegardes automatiques configurées"
-}
 
 # Affichage des informations finales
 show_final_info() {
