@@ -567,6 +567,59 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Publications Section */}
+      {publications.length > 0 && (
+        <section className="py-20 px-4 bg-slate-50">
+          <div className="container mx-auto max-w-6xl">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">
+                Publications Officielles
+              </h2>
+              <p className="text-xl text-slate-600">
+                Dernières annonces et publications importantes
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {publications.map((publication) => (
+                <Card key={publication.id} className="hover:shadow-lg transition-shadow duration-300">
+                  <CardHeader>
+                    <div className="flex justify-between items-start mb-2">
+                      <Badge variant="secondary" className="text-xs">
+                        {new Date(publication.publishedAt).toLocaleDateString('fr-FR')}
+                      </Badge>
+                      <Badge className="bg-blue-600 text-xs">
+                        Publication officielle
+                      </Badge>
+                    </div>
+                    <CardTitle className="text-lg leading-tight">
+                      {publication.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-slate-600 text-sm line-clamp-3 mb-4">
+                      {publication.content}
+                    </p>
+                    <div className="flex items-center text-xs text-slate-500">
+                      <Users className="w-3 h-3 mr-1" />
+                      {publication.author}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            
+            {publications.length >= 10 && (
+              <div className="text-center mt-12">
+                <Button variant="outline" size="lg">
+                  Voir toutes les publications
+                </Button>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
       {/* Footer */}
       <footer className="bg-slate-900 text-white py-12 px-4">
         <div className="container mx-auto max-w-6xl">
