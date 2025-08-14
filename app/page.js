@@ -355,7 +355,7 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {portfolio.map((project, index) => (
-              <Card key={index} className="overflow-hidden hover:shadow-xl transition-shadow duration-300">
+              <Card key={project.id || index} className="overflow-hidden hover:shadow-xl transition-shadow duration-300">
                 <div className="relative h-48 overflow-hidden">
                   <img 
                     src={project.image}
