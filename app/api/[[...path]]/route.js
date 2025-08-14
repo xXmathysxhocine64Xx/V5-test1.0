@@ -73,15 +73,48 @@ export async function POST(request) {
     const url = new URL(request.url);
     const pathname = url.pathname;
 
+    // Get client IP for rate limiting
+    const forwarded = request.headers.get('x-forwarded-for');
+    const ip = forwarded ? forwarded.split(',')[0] : request.headers.get('x-real-ip') || 'unknown';
+
     // Handle contact form submissions
     if (pathname.includes('/api/contact')) {
+      // Rate limiting check
+      if (isRateLimited(ip)) {
+        return NextResponse.json(
+          { error: 'Trop de requêtes. Veuillez patienter avant de réessayer.' },
+          { status: 429 }
+        );
+      }
+
       const body = await request.json();
       const { name, email, message, subject = 'Nouveau message de GetYourSite' } = body;
       
-      // Validate required fields
-      if (!name || !email || !message) {
+      // Enhanced validation
+      if (!validateInput(name, 100)) {
         return NextResponse.json(
-          { error: 'Le nom, l\'email et le message sont requis' },
+          { error: 'Le nom est requis et doit contenir moins de 100 caractères' },
+          { status: 400 }
+        );
+      }
+
+      if (!validateInput(email, 254) || !validateEmail(email)) {
+        return NextResponse.json(
+          { error: 'Une adresse email valide est requise' },
+          { status: 400 }
+        );
+      }
+
+      if (!validateInput(message, 2000)) {
+        return NextResponse.json(
+          { error: 'Le message est requis et doit contenir moins de 2000 caractères' },
+          { status: 400 }
+        );
+      }
+
+      if (subject && !validateInput(subject, 200)) {
+        return NextResponse.json(
+          { error: 'Le sujet doit contenir moins de 200 caractères' },
           { status: 400 }
         );
       }
@@ -89,7 +122,12 @@ export async function POST(request) {
       // Check if Gmail is configured
       if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_USER === 'votre-email@gmail.com') {
         console.log('Contact form submission (Gmail not configured):', {
-          name, email, subject, message, timestamp: new Date().toISOString()
+          name: sanitizeHtml(name), 
+          email: sanitizeHtml(email), 
+          subject: sanitizeHtml(subject), 
+          messageLength: message.length,
+          ip: ip,
+          timestamp: new Date().toISOString()
         });
         
         return NextResponse.json({
@@ -111,29 +149,35 @@ export async function POST(request) {
           },
         });
         
-        // Format email content
+        // Sanitize all inputs for email
+        const sanitizedName = sanitizeHtml(name);
+        const sanitizedEmail = sanitizeHtml(email);
+        const sanitizedMessage = sanitizeHtml(message);
+        const sanitizedSubject = sanitizeHtml(subject);
+        
+        // Format email content with sanitized data
         const mailOptions = {
-          from: `"${name}" <${process.env.GMAIL_USER}>`,
+          from: `"GetYourSite" <${process.env.GMAIL_USER}>`, // Fixed from field
           to: process.env.GMAIL_RECIPIENT || process.env.GMAIL_USER,
-          replyTo: email,
-          subject: subject,
+          replyTo: email, // Keep original for reply purposes
+          subject: sanitizedSubject,
           text: `
             Nouveau message depuis GetYourSite
             
-            Nom: ${name}
-            Email: ${email}
+            Nom: ${sanitizedName}
+            Email: ${sanitizedEmail}
             
             Message:
-            ${message}
+            ${sanitizedMessage}
           `,
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
               <h2 style="color: #2563eb;">Nouveau message depuis GetYourSite</h2>
-              <p><strong>Nom:</strong> ${name}</p>
-              <p><strong>Email:</strong> ${email}</p>
+              <p><strong>Nom:</strong> ${sanitizedName}</p>
+              <p><strong>Email:</strong> ${sanitizedEmail}</p>
               <p><strong>Message:</strong></p>
               <div style="background-color: #f8fafc; padding: 15px; border-radius: 5px; border-left: 4px solid #2563eb;">
-                ${message.replace(/\n/g, '<br>')}
+                ${sanitizedMessage.replace(/\n/g, '<br>')}
               </div>
               <p style="color: #64748b; font-size: 12px; margin-top: 20px;">
                 Ce message a été envoyé depuis le formulaire de contact de GetYourSite.
@@ -143,21 +187,23 @@ export async function POST(request) {
         };
         
         // Send email
-        const info = await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions);
         
         return NextResponse.json({ 
           success: true, 
-          message: 'Votre message a été envoyé avec succès !',
-          messageId: info.messageId 
+          message: 'Votre message a été envoyé avec succès !'
         });
         
       } catch (emailError) {
-        console.error('Email sending error:', emailError);
+        console.error('Email sending error occurred at:', new Date().toISOString());
         
-        // Log the message even if email fails
+        // Log the message even if email fails (with sanitized data)
         console.log('Contact form submission (email failed):', {
-          name, email, subject, message, 
-          error: emailError.message,
+          name: sanitizeHtml(name), 
+          email: sanitizeHtml(email), 
+          subject: sanitizeHtml(subject), 
+          messageLength: message.length,
+          ip: ip,
           timestamp: new Date().toISOString()
         });
         
