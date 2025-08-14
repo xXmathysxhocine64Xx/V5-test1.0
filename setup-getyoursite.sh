@@ -161,8 +161,20 @@ install_nodejs() {
     # Installation de Yarn et PM2
     npm install -g yarn pm2
     
+    # Vérification des installations
     local yarn_version
     local pm2_version
+    
+    if ! command -v yarn &> /dev/null; then
+        print_error "Yarn n'a pas pu être installé"
+        exit 1
+    fi
+    
+    if ! command -v pm2 &> /dev/null; then
+        print_error "PM2 n'a pas pu être installé"
+        exit 1
+    fi
+    
     yarn_version=$(yarn --version)
     pm2_version=$(pm2 --version)
     
