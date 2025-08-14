@@ -471,7 +471,7 @@ export async function DELETE(request) {
       const messageId = pathname.split('/').pop();
       
       await database.collection('contact_submissions').deleteOne(
-        { _id: new require('mongodb').ObjectId(messageId) }
+        { _id: new ObjectId(messageId) }
       );
       
       return NextResponse.json({ success: true, message: 'Message supprimé' });
