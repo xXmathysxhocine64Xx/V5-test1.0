@@ -532,7 +532,7 @@ export default function AdminPanel() {
 
       <div className="container mx-auto px-4 py-8">
         <Tabs defaultValue="hero" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="hero" className="flex items-center gap-2">
               <Layout className="w-4 h-4" />
               Hero
@@ -544,6 +544,10 @@ export default function AdminPanel() {
             <TabsTrigger value="portfolio" className="flex items-center gap-2">
               <Image className="w-4 h-4" />
               Portfolio
+            </TabsTrigger>
+            <TabsTrigger value="publications" className="flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              Publications ({publications.length})
             </TabsTrigger>
             <TabsTrigger value="contact" className="flex items-center gap-2">
               <Type className="w-4 h-4" />
